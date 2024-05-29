@@ -67,8 +67,13 @@ public class SwiftFlutterWatchOsConnectivityPlugin: NSObject, FlutterPlugin {
                             }
                         }
                     }
-                    watchSession?.sendMessage(message, replyHandler: handler){ error in
-                        self.handleFlutterError(result: result, message: error.localizedDescription)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        strongSelf.watchSession?.sendMessage(message, replyHandler: handler) { error in
+                            strongSelf.handleFlutterError(result: result, message: error.localizedDescription)
+                        }
                     }
                 }
                 
